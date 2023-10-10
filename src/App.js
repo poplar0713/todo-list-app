@@ -25,22 +25,39 @@ const TodoItemInputField = (props) => {
 }
 
 const TodoItemList = (props) => {
+  const todoList = props.todoItemList && props.todoItemList.map((todoItem, index) => {
+    return <li key={index}>{todoItem.todoItemContent}</li>
+  });
+  
   return (
     <div>
-
+      <ul>{todoList}</ul>
     </div>
   )
 }
 
-function App() {
-  return (
-    <div className="App">
+let todoItemId = 0;
+
+function App() { 
+  const [todoItemList, setTodoItemList] = useState([]);
+  const onSubmit = (newTodoItem) => {
+    setTodoItemList([...todoItemList, {
+      id: todoItemId++,
+      todoItemContent: newTodoItem,
+      isFinished: false
+    }])
+  }
+
+  return ( 
+    <div className="App"> 
       <TodoItemInputField onSubmit={(input) => {
+        onSubmit(input);
         console.log('submit ' + input);
-      }}/>
+      }}/> 
       <TodoItemList />
+      <TodoItemList todoItemList ={todoItemList} />
     </div>
-  );
+  )
 }
 
 export default App;
