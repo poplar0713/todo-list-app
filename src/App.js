@@ -1,12 +1,12 @@
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TextField } from '@mui/material';
 import { Button } from '@mui/material';
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore, collection, addDoc } from "firebase/firestore" 
+import { getFirestore, collection, addDoc, doc, setDoc, deleteDoc, getDocs } from "firebase/firestore" 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -82,6 +82,22 @@ const TodoItemList = (props) => {
 
 function App() { 
   const [todoItemList, setTodoItemList] = useState([]);
+
+  useEffect(() => {
+    getDocs(collection(db, "todoItem")).then((querySnapshot) => {
+      const firestoreTodoItemList = [];
+      querySnapshot.forEach((doc) => {
+        firestoreTodoItemList.push({
+          id: doc.id,
+          todoItemContent: doc.data().todoItemContent,
+          isFinished: doc.data().isFinished,
+        });
+      });
+      setTodoItemList(firestoreTodoItemList);
+    })
+  }, []);
+
+
   const onSubmit = async (newTodoItem) => {
     const docRef = await addDoc(collection(db, "todoItem"), {
       todoItemContent: newTodoItem,
@@ -95,13 +111,19 @@ function App() {
     }])
   }
 
-  const onRemoveClick = (removeTodoItem) => {
+  const onRemoveClick = async (removeTodoItem) => {
+    const todoItemRef = doc (db, "todoItem", removeTodoItem.id);
+    await deleteDoc(todoItemRef);
+
     setTodoItemList(todoItemList.filter((todoItem) => {
       return todoItem.id !== removeTodoItem.id;
     }));
   }
   
-  const onTodoItemClick = (clickedTodoItem) => {
+  const onTodoItemClick = async (clickedTodoItem) => {
+    const todoItemRef = doc(db, "todoItem", clickedTodoItem.id);
+    await setDoc(todoItemRef, { isFinished: !clickedTodoItem.isFinished }, { merge: true });
+
     setTodoItemList(todoItemList.map((todoItem) => {
       if (clickedTodoItem.id === todoItem.id) {
         return {
@@ -116,7 +138,7 @@ function App() {
   }
 
   return ( 
-    <div className="App"> 
+    <div className="App">
       <TodoItemInputField onSubmit={(input) => { onSubmit(input) }}/> 
       <TodoItemList 
         todoItemList ={todoItemList} 
