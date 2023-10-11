@@ -25,13 +25,12 @@ const TodoItemInputField = (props) => {
 }
 
 const TodoItem = (props) => {
-  // BUG 수정 필요 : 클릭시 줄이 안생김
   const style = props.todoItem.isFinished ? { textDecoration: 'line-through'} : {};
   return (
     <li>
       <span  
         style = {style}
-        onClick={() => props.onTodoItemClick(props.todoItem)}
+        onClick={() => {props.onTodoItemClick(props.todoItem)}}
       >
         {props.todoItem.todoItemContent}
       </span>
@@ -65,7 +64,7 @@ function App() {
   
   const onTodoItemClick = (clickedTodoItem) => {
     setTodoItemList(todoItemList.map((todoItem) => {
-      if (clickedTodoItem.id === todoItemId) {
+      if (clickedTodoItem.id === todoItem.id) {
         return {
           id : clickedTodoItem.id,
           todoItemContent : clickedTodoItem.todoItemContent,
@@ -79,10 +78,7 @@ function App() {
 
   return ( 
     <div className="App"> 
-      <TodoItemInputField onSubmit={(input) => {
-        onSubmit(input);
-        // console.log('submit ' + input);
-      }}/> 
+      <TodoItemInputField onSubmit={(input) => { onSubmit(input) }}/> 
       <TodoItemList todoItemList ={todoItemList} onTodoItemClick={onTodoItemClick} />
     </div>
   )
