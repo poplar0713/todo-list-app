@@ -1,7 +1,8 @@
 import './App.css';
 import { useEffect, useState } from 'react';
-import { AppBar, TextField, Toolbar, Typography } from '@mui/material';
-import { Button } from '@mui/material';
+import { AppBar, Box, IconButton, ListItem, Stack, TextField, Toolbar, Typography, Button, ListItemButton, ListItemIcon, ListItemText, List, Container } from '@mui/material';
+import Checkbox from '@mui/material/Checkbox';
+import { DeleteOutlined } from '@mui/icons-material';
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -39,30 +40,39 @@ const TodoItemInputField = (props) => {
   };
 
   return (
-    <div>
-      <TextField
-        id = "todo-item-input"
-        label="TO DO"
-        variant='outlined'
-        onChange={(e) => setInput(e.target.value)} value={input}
-      />
-      <Button variant='outlined' onClick={onSubmit}> 등록 </Button>
-    </div>
+    <Box sx={{margin: "auto"}}>
+      <Stack direction="row" spacing={2} justifyContent="center">
+        <TextField 
+          id="todo=item-input"
+          label="해야 할 일"
+          variant="outlined"
+          onChange={(e) => setInput(e.target.value)}
+          value={input}
+        />
+        <Button variant='outlined' onClick={onSubmit}>등록</Button>
+      </Stack>
+    </Box>
   );
 }
 
 const TodoItem = (props) => {
   const style = props.todoItem.isFinished ? { textDecoration: 'line-through'} : {};
   return (
-    <li>
-      <span  
-        style = {style}
-        onClick={() => {props.onTodoItemClick(props.todoItem)}}
-      >
-        {props.todoItem.todoItemContent}
-      </span>
-      <Button variant='outlined' onClick={() => props.onRemoveClick(props.todoItem)}> 삭제 </Button>
-    </li>
+    <ListItem secondaryAction={
+      <IconButton edge="end" aria-label='comments' onClick={() => props.onRemoveClick(props.todoItem)}>
+        <DeleteOutlined />
+      </IconButton>
+    }>
+      <ListItemButton role={undefined} onClick={() => props.onTodoItemClick(props.todoItem)} dense>
+        <ListItemIcon>
+          <Checkbox
+            checked={props.todoItem.isFinished}
+          />
+        </ListItemIcon>
+        <ListItemText style={style} primary={props.todoItem.todoItemContent} />
+      </ListItemButton>
+
+    </ListItem>
   );
 }
 
@@ -77,9 +87,11 @@ const TodoItemList = (props) => {
   });
   
   return (
-    <div>
-      <ul>{todoList}</ul> 
-    </div>
+    <Box>
+      <List sx={{ margin: "auto", maxWidth: 720 }}>
+        {todoList}
+      </List>
+    </Box>
   )
 }
 
@@ -99,10 +111,11 @@ const TodoListAppBar = (props) => {
 
   return (
     <AppBar position='static'>
-      <Toolbar>
-        <Typography variant='h6' component="div" sx={{flexGrow: 1}}>
+      <Toolbar sx={{width: "100%", maxWidth: 720, margin: "auto"}}>
+        <Typography variant='h6' component="div">
           Toda List App
         </Typography>
+        <Box sx={{flexGrow: 1}} />
         {button}
       </Toolbar>
     </AppBar>
@@ -171,12 +184,14 @@ function App() {
   return ( 
     <div className="App">
       <TodoListAppBar currentUser={currentUser}/>
-      <TodoItemInputField onSubmit={(input) => { onSubmit(input) }}/>
-      <TodoItemList 
-        todoItemList ={todoItemList} 
-        onTodoItemClick={onTodoItemClick} 
-        onRemoveClick={onRemoveClick}
-      />
+        <Container sx={{paddingTop: 3}}>
+        <TodoItemInputField onSubmit={(input) => { onSubmit(input) }}/>
+        <TodoItemList 
+          todoItemList ={todoItemList} 
+          onTodoItemClick={onTodoItemClick} 
+          onRemoveClick={onRemoveClick}
+        />
+        </Container>
     </div>
   )
 }
