@@ -6,7 +6,7 @@ import { Button } from '@mui/material';
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore, collection, addDoc, doc, setDoc, deleteDoc, getDocs } from "firebase/firestore" 
+import { getFirestore, collection, addDoc, doc, setDoc, deleteDoc, getDocs, query, orderBy } from "firebase/firestore" 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -84,13 +84,15 @@ function App() {
   const [todoItemList, setTodoItemList] = useState([]);
 
   const syncTodoItemListStateWithFirestore = () => {
-    getDocs(collection(db, "todoItem")).then((querySnapshot) => {
+    const q = query(collection(db, "todoItem"), orderBy("createdTime", "desc"))
+    getDocs(q).then((querySnapshot) => {
       const firestoreTodoItemList = [];
       querySnapshot.forEach((doc) => {
         firestoreTodoItemList.push({
           id: doc.id,
           todoItemContent: doc.data().todoItemContent,
           isFinished: doc.data().isFinished,
+          createdTime: doc.data().createdTime ?? 0,
         });
       });
       setTodoItemList(firestoreTodoItemList);
@@ -103,9 +105,10 @@ function App() {
 
 
   const onSubmit = async (newTodoItem) => {
-    const docRef = await addDoc(collection(db, "todoItem"), {
+    await addDoc(collection(db, "todoItem"), {
       todoItemContent: newTodoItem,
       isFinished: false,
+      createdTime : Math.floor(Date.now() / 1000),
     });
     syncTodoItemListStateWithFirestore();  
   };
