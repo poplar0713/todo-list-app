@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: todo-list-app
+  description: todo-list-app
+  owner: poplar0713
+spec:
+  type: service
+  lifecycle: production
+  owner: poplar0713
