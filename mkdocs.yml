@@ -1,0 +1,6 @@
+site_name: "Todo List App Docs"
+nav:
+  - Home: index.md
+docs_dir: backstage/docs
+plugins:
+  - techdocs-core
