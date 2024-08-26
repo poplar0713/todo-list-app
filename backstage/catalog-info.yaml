@@ -6,6 +6,7 @@ metadata:
   owner: poplar0713
   annotations:
     github.com/project-slug: 'poplar0713/todo-list-app'
+    backstage.io/techdocs-ref: 'github:https://github.com/poplar0713/todo-list-app'
 spec:
   type: service
   lifecycle: production
