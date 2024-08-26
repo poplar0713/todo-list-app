@@ -26,7 +26,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// const analytics = getAnalytics(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 const auth = getAuth(app);
@@ -153,11 +153,11 @@ function App() {
 
   useEffect(() => {
     syncTodoItemListStateWithFirestore();
-  }, []);
-
+  }, [syncTodoItemListStateWithFirestore]);
+  
   useEffect(() => {
     syncTodoItemListStateWithFirestore();
-  }, [currentUser]);
+  }, [currentUser, syncTodoItemListStateWithFirestore]);
 
   const onSubmit = async (newTodoItem) => {
     await addDoc(collection(db, "todoItem"), {
