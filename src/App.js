@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import './App.css';
 import { useEffect, useState } from 'react';
 import { AppBar, Box, IconButton, ListItem, Stack, TextField, Toolbar, Typography, Button, ListItemButton, ListItemIcon, ListItemText, List, Container } from '@mui/material';
@@ -6,7 +7,7 @@ import { DeleteOutlined } from '@mui/icons-material';
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+// import { getAnalytics } from "firebase/analytics";
 import { getFirestore, collection, addDoc, doc, setDoc, deleteDoc, getDocs, query, orderBy, where } from "firebase/firestore" 
 import { GoogleAuthProvider, getAuth, signInWithRedirect, onAuthStateChanged, signOut } from "firebase/auth"
 // TODO: Add SDKs for Firebase products that you want to use
@@ -153,11 +154,11 @@ function App() {
 
   useEffect(() => {
     syncTodoItemListStateWithFirestore();
-  }, [syncTodoItemListStateWithFirestore]);
-  
+  }, []);
+
   useEffect(() => {
     syncTodoItemListStateWithFirestore();
-  }, [currentUser, syncTodoItemListStateWithFirestore]);
+  }, [currentUser]);
 
   const onSubmit = async (newTodoItem) => {
     await addDoc(collection(db, "todoItem"), {
