@@ -4,6 +4,8 @@ metadata:
   name: todo-list-app
   description: todo-list-app
   owner: poplar0713
+  annotations:
+    github.com/project-slug: 'poplar0713/todo-list-app'
 spec:
   type: service
   lifecycle: production
